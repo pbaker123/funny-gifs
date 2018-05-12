@@ -1,6 +1,5 @@
-var categories = ["Cat Fails", "Dogs with Shoes", "Fainting Goats", "Holiday", "Kids", "Accidents", "Ice", "Movies", "Slips", "Falls", "Rodents", "Hippopotamus"];
-var quantityMultiplier = 1;
-var currentSelection = "";
+var categories = ["Cat Fails", "Dogs with Shoes", "Fainting Goats", "Holiday", "Kids", "Accidents", "Ice", "Movies", "Slips", "Falls", "Rodents", "Hippopotamus", "Mean Tweets"];
+
 
 function renderButtons() {
   var buttonContainer = $("#button-container");
@@ -14,24 +13,25 @@ function renderButtons() {
   };
 };
 
-
-
-$("#add-button").on("click", function(event) {
-  event.preventDefault();
+function addNewButton() {
   var category = $("#add-input").val().trim();
   if (category == ""){
     return;
   };
   categories.push(category)
   $("#button-container").val("")
-  renderButtons();
+  renderButtons()
+};
+
+$("#add-button").on("click", function(event) {
+  event.preventDefault()
+  addNewButton()
+  
 });
 
 $("body").on("click", ".picture-button", function(event) {
   var funny = this.id;
-  currentSelection = funny;
-  var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&limit=" + 10 * quantityMultiplier + "&q=funny+" + funny;
-
+  var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&limit=" + 10 + "&q=funny+" + funny;
 
   $.ajax({
     url: queryURL,
@@ -39,7 +39,6 @@ $("body").on("click", ".picture-button", function(event) {
   }).then(function(response){
     
     $("#gif-container").text("")
-    $("#gif-container").append("<button>").text("Show 10 More").addClass("ten-more")
     for (var i = 0; i < response.data.length; i++) {
       var newDiv = $("<div>");
       var newImg = $("<img>");
@@ -69,16 +68,14 @@ $("body").on("click", ".picture-button", function(event) {
 });
 
 $("body").on("click", $(".gif-class"), function(event) {
-      var state = $(event.target).attr("data-state");
-      console.log(event.target)
-      console.log(state)
-      if (state === "still") {
-        $(event.target).attr("src", $(event.target).attr("data-animate"));
-        $(event.target).attr("data-state", "animate");
-      } else {
-        $(event.target).attr("src", $(event.target).attr("data-still"));
-        $(event.target).attr("data-state", "still");
-      }
+  var state = $(event.target).attr("data-state");
+  if (state === "still") {
+    $(event.target).attr("src", $(event.target).attr("data-animate"));
+    $(event.target).attr("data-state", "animate");
+  } else {
+    $(event.target).attr("src", $(event.target).attr("data-still"));
+    $(event.target).attr("data-state", "still");
+  }
 });
 
 
